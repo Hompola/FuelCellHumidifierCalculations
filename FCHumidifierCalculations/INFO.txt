@@ -1,0 +1,7 @@
+Try opening the DataSets directory and filling it with .txt files that have tables of values to interpolate between! 
+Use text headers for each column! 
+You may also use a list format, with the headers breaking up each column.
+
+You have a couple of examples in your DataSets folder already, if the programme made your directory. 
+Otherwise, with an empty DataSets folder, run the programme again to get some examples!
+Both DataSet1 and DataSet2 contain the Physical Properties of Dry Air at 1 Bar Pressure
