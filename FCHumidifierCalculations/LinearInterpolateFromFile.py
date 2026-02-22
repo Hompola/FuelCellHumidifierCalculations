@@ -23,7 +23,7 @@ def ManualRequest():
 
 def AutomatedRequest(fileName, columnID, interpolationValue):
     """
-    :param fileName: File name with extension. Eg.: "DataSet1"
+    :param fileName: File name with extension. Eg.: "DataSet1.txt"
     :param columnID: The index of the key column,
     starting from zero. The key column contains the values for the physical property the query will be in.
     :param interpolationValue: The value of the query. Lower and upper bounds are searched for in the key column's
