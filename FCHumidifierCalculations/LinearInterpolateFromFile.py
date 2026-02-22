@@ -1,11 +1,42 @@
 import os
-import sys
 import displayData as d
 from displayData import DisplayData
 from displayData import WTT
 
 g = d.g
 w = d.w
+r = d.r
+parentDirectory = os.getcwd()
+
+def main():
+    #ManualRequest()
+    fileName = "HydrogenPhysicalProperties1_5bar.txt"
+    print(AutomatedRequest("Empty.txt", 0,100))
+    return
+
+
+def ManualRequest():
+    ListFiles()
+    dataArray = ProcessFile("choose")
+    Interpolate(dataArray, "choose", "choose")
+
+
+def AutomatedRequest(fileName, columnID, interpolationValue):
+    """
+    :param fileName: File name with extension. Eg.: "DataSet1"
+    :param columnID: The index of the key column,
+    starting from zero. The key column contains the values for the physical property the query will be in.
+    :param interpolationValue: The value of the query. Lower and upper bounds are searched for in the key column's
+    values. Then all other columns will be linearly interpolated to find the connected physical properties
+    corresponding to this value
+    :return: list of all interpolated values from all columns
+    """
+    filePath = os.path.join(parentDirectory + "\DataSets\ ".strip()+fileName)
+    #print(filePath)
+    dataArray = ProcessFile(filePath)
+    result = Interpolate(dataArray, columnID, interpolationValue)
+    return result
+
 
 
 def ListFiles():
@@ -13,7 +44,6 @@ def ListFiles():
     global dataDirectory
     global dataSets
     # First lets find the folder that main.py is in:
-    parentDirectory = os.getcwd()
     print(parentDirectory)
     # Now lets check for a DataSets folder, and create one if there is none:
     dataDirectory = os.path.join(parentDirectory + "\DataSets")
@@ -45,7 +75,7 @@ def ProcessFile(filePath):
         try:
             file = open(filePath, encoding="utf-8", errors="ignore")
         except:
-            WTT("not a valid path")
+            WTT("Not a valid path!")
             return
 
     data = file.read().strip().split("\n")
@@ -111,16 +141,16 @@ def ProcessFileInputHandler():
         return file
 
 
-def Interpolate(array, columnID=None, rowValue=None):
+def Interpolate(array, columnID=None, value=None):
     manual = False
-    if columnID == "choose" or rowValue == "choose":
+    if columnID == "choose" or value == "choose":
         manual = True
         arrayInfo = InterpolateInputHandler()
         ID = arrayInfo[0]
         x = arrayInfo[1]
     else:
         ID = columnID
-        x = rowValue
+        x = value
 
     dataArray = array
     x0 = 0
@@ -130,6 +160,13 @@ def Interpolate(array, columnID=None, rowValue=None):
     x1index = 0
     y1 = 0
     result = []
+    values = []
+    if dataArray == None:
+        result = d.r + "\nNo file is accessible under the given file name! Make sure to include file extensions. For example: DataSet1.txt" + d.w
+        return result
+    if len(dataArray)==0:
+        result = d.r + "\nThis file is empty!" + d.w
+        return result
 
     # We'll convert all the values into floating point numbers to work with from now on
     values = [list(map(float, i)) for i in dataArray[1:len(dataArray)]]  # I'm quite proud of this one :3
@@ -191,25 +228,6 @@ def InterpolateInputHandler():
             continue
         # Runs only if the value is valid
         return ID, value  # Exit the loop after successful input
-
-
-def ManualRequest():
-    ListFiles()
-    dataArray = ProcessFile("choose")
-    Interpolate(dataArray, "choose", "choose")
-
-
-def AutomatedRequest(filePath, columnID, rowValue):
-    dataArray = ProcessFile(filePath)
-    result = Interpolate(dataArray, columnID, rowValue)
-    return result
-
-
-def main():
-    ManualRequest()
-    # filePath = r"C:\Users\juven\PycharmProjects\LinearInterpolator\DataSets\HydrogenPhysicalProperties1_5bar.txt"
-    # print(AutomatedRequest(filePath, 0,100))
-    return
 
 
 def SetUp():

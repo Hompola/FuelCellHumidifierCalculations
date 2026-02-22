@@ -1,7 +1,8 @@
 import sys
 
-w = "\033[0m"  # white color
-g = "\033[0;32m"  # green color
+w = "\033[0m"  # white colour
+g = "\033[0;32m"  # green colour
+r = "\033[31m" # red colour
 
 def WTT(message):  # Write to terminal
     sys.stdout.write(message)
